@@ -10,7 +10,9 @@ public class Admin {
     private String  uid;
 
     public static void main(String[] args) {
+
         System.out.println("xzz azz");
+        System.out.println("t怎么");
     }
     
 
