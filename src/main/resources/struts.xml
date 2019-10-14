@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd" >
+<struts>
+    <package name="admin" extends="struts-default" namespace="/admin">
+        <action name="login" class="adminAction" method="login">
+            <result name="ok" type="chain">
+                <param name="namespace">/department</param>
+                <param name="actionName">queryAllDepartment</param>
+            </result>
+            <result name="error" type="redirect">/login.jsp</result>
+        </action>
+        <action name="regist" class="adminAction" method="regist">
+            <result name="registOk">/login.jsp</result>
+        </action>
+    </package>
+
+    <package name="department" extends="struts-default" namespace="/department">
+        <action name="queryAllDepartment" class="departmentAction" method="queryAllDepartment">
+            <result name="queryAllDepartment">/departments.jsp</result>
+        </action>
+        <action name="insertDepartment" class="departmentAction" method="insertDepartment">
+            <result name="insertOK" type="redirectAction">/queryAllDepartment</result>
+        </action>
+        <action name="update" class="departmentAction" method="update">
+            <result name="updateOK" type="redirectAction">/queryAllDepartment</result>
+        </action>
+    </package>
+
+
+    <package name="employee" extends="struts-default" namespace="/employee">
+        <action name="queryAll" class="employeeAction" method="queryAll">
+            <result name="queryAll">/emplist.jsp</result>
+        </action>
+
+        <action name="updateEmployee" class="employeeAction" method="updateEmployee">
+            <result name="updateok" type="redirectAction">
+                <param name="namespace">/department</param>
+                <param name="actionName">queryAllDepartment</param>
+            </result>
+        </action>
+
+        <action name="insert" class="employeeAction" method="insert">
+            <result name="insertok" type="redirectAction">
+                <param name="namespace">/department</param>
+                <param name="actionName">queryAllDepartment</param>
+            </result>
+        </action>
+
+        <action name="delete" class="employeeAction" method="delete">
+            <result name="delete" type="redirectAction">queryAll?id=${department.id}</result>
+        </action>
+
+    </package>
+</struts>

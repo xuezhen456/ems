@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--构建sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+        <!--起别名-->
+        <property name="typeAliasesPackage" value="com.baizhi.entity"></property>
+        <!--注册mapper文件-->
+        <property name="mapperLocations">
+            <array>
+                <value>com/baizhi/mapper/*Mapper.xml</value>
+            </array>
+        </property>
+    </bean>
+    <!--构建数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/threed"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="password" value="root"></property>
+        <property name="username" value="root"></property>
+    </bean>
+
+
+    <!--批量创建dao-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <property name="basePackage" value="com.baizhi.mapper"></property>
+    </bean>
+    <!--将service放入工厂 依赖dao-->
+    <bean id="adminService" class="com.baizhi.service.AdminServiceImpl">
+        <property name="adminMapper" ref="adminMapper"></property>
+    </bean>
+
+    <bean id="employeeService" class="com.baizhi.service.EmployeeServiceImpl">
+        <property name="employeeMapper" ref="employeeMapper"></property>
+    </bean>
+
+    <bean id="departmentService" class="com.baizhi.service.DepartmentServiceImpl">
+        <property name="departmentMapper" ref="departmentMapper"></property>
+    </bean>
+
+
+    <!--事务-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <tx:advice id="interceptor" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            <tx:method name="login"/>
+            <tx:method name="regist"></tx:method>
+            <tx:method name="queryAllDepartment"></tx:method>
+            <tx:method name="insertDepartment"></tx:method>
+            <tx:method name="update"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+    <!--切面-->
+    <aop:config>
+        <aop:pointcut id="pp" expression="execution(* com.baizhi.service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="interceptor" pointcut-ref="pp"></aop:advisor>
+    </aop:config>
+
+    <!--将action放入工厂 依赖service action是多例-->
+    <bean id="adminAction" class="com.baizhi.controller.AdminAction" scope="prototype">
+        <property name="service" ref="adminService"></property>
+    </bean>
+    <bean id="employeeAction" class="com.baizhi.controller.EmployeeAction" scope="prototype">
+        <property name="employeeService" ref="employeeService"></property>
+        <property name="departmentService" ref="departmentService"></property>
+    </bean>
+    <bean id="departmentAction" class="com.baizhi.controller.DepartmentAction" scope="prototype">
+        <property name="departmentService" ref="departmentService"></property>
+    </bean>
+</beans>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.mapper.AdminMapper">
+    <!--管理员登陆-->
+    <select id="loginAdmin" resultType="Admin" parameterType="String">
+        select * from admin where name = #{name} and password= #{password}
+    </select>
+    <!--管理员注册-->
+    <insert id="insertAdmin" parameterType="Admin">
+        insert into admin(name,username,password,sex) values(#{name},#{username},#{password},#{sex})
+    </insert>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.mapper.EmployeeMapper">
+    <!--查询员工-->
+    <select id="queryAllEmployee" resultType="Employee" parameterType="Integer">
+        select e.* FROM
+        department d join employee e ON
+        d.name=e.department_name
+        WHERE d.id=#{id}
+    </select>
+    <!--注册员工-->
+    <insert id="insertEmployee" parameterType="Employee">
+         insert into employee(src,name,salary,age,department_name) values(#{src},#{name},#{salary},#{age},#{department_name})
+     </insert>
+    <!--删除员工-->
+    <delete id="deleteEmployee" parameterType="Integer">
+        delete  from employee where  id=#{id}
+    </delete>
+    <!--修改员工-->
+    <update id="updateEmployee" parameterType="Employee">
+        update employee set src=#{src},name=#{name},salary=#{salary},age=#{age},department_name=#{department_name} where id=#{id}
+    </update>
+
+</mapper>
