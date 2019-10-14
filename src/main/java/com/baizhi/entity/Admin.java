@@ -6,6 +6,11 @@ public class Admin {
     private String username;
     private String password;
     private String sex;
+    
+    private String  uid;
+    
+    
+    
 
     @Override
     public String toString() {
