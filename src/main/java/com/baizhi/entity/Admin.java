@@ -8,8 +8,10 @@ public class Admin {
     private String sex;
     
     private String  uid;
-    
-    
+
+    public static void main(String[] args) {
+        System.out.println("xzz azz");
+    }
     
 
     @Override
